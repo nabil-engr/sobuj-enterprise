@@ -290,7 +290,7 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
               <span class="material-symbols-outlined text-[#003527] text-[30px] group-hover:scale-110 transition-transform">{{ cat.icon }}</span>
             </div>
             <h3 class="font-bold text-slate-800 text-xs group-hover:text-[#003527] transition line-clamp-1">{{ cat.name }}</h3>
-            <span class="text-[11px] text-slate-400 mt-0.5">{{ cat.itemCount }} Items</span>
+            <span class="text-[11px] text-slate-400 mt-0.5">{{ cat.itemCount }} {{ cat.itemCount === 1 ? 'Item' : 'Items' }}</span>
           </a>
         }
       </div>
@@ -557,12 +557,12 @@ export class HomeComponent implements OnInit {
   productService = inject(ProductService);
 
   categories = [
-    { name: 'Paper & Notebooks', slug: 'paper-notebooks', itemCount: '180+', icon: 'menu_book' },
-    { name: 'Writing & Pens', slug: 'writing-correction', itemCount: '320+', icon: 'edit_note' },
-    { name: 'Office Supplies', slug: 'office-supplies', itemCount: '410+', icon: 'inventory_2' },
-    { name: 'School Essentials', slug: 'school-essentials', itemCount: '190+', icon: 'backpack' },
-    { name: 'Art & Crafts', slug: 'art-craft-supplies', itemCount: '260+', icon: 'palette' },
-    { name: 'Desk Storage', slug: 'desk-organization', itemCount: '140+', icon: 'desktop_windows' }
+    { name: 'Paper & Notebooks', slug: 'paper-notebooks', itemCount: 0, icon: 'menu_book' },
+    { name: 'Writing & Pens', slug: 'writing-correction', itemCount: 0, icon: 'edit_note' },
+    { name: 'Office Supplies', slug: 'office-supplies', itemCount: 0, icon: 'inventory_2' },
+    { name: 'School Essentials', slug: 'school-essentials', itemCount: 0, icon: 'backpack' },
+    { name: 'Art & Crafts', slug: 'art-craft-supplies', itemCount: 0, icon: 'palette' },
+    { name: 'Desk Storage', slug: 'desk-organization', itemCount: 0, icon: 'desktop_windows' }
   ];
 
   displayBrands: { id?: number; name: string; slug?: string }[] = [
@@ -620,14 +620,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.productService.getProducts({ pageSize: 20 }).subscribe({
+    this.productService.getProducts({ pageSize: 500 }).subscribe({
       next: (res) => {
         if (res.items && res.items.length > 0) {
-          this.allProducts = res.items;
-          this.popularProducts = res.items.filter(p => p.isBestSeller || p.isFeatured);
-          this.newArrivalProducts = res.items.filter(p => p.isNewArrival).slice(0, 3);
-          if (this.popularProducts.length < 5) this.popularProducts = res.items;
-          if (this.newArrivalProducts.length === 0) this.newArrivalProducts = res.items.slice(0, 3);
+          this.applyProductData(res.items);
         } else {
           this.loadFallbackProducts();
         }
@@ -755,8 +751,29 @@ export class HomeComponent implements OnInit {
       }
     ];
 
-    this.popularProducts = seed.slice(0, 4);
-    this.newArrivalProducts = seed.slice(3, 6);
+    this.applyProductData(seed);
+  }
+
+  private applyProductData(products: Product[]): void {
+    this.allProducts = products;
+    const categoryIds: Record<string, number> = {
+      'office-supplies': 1,
+      'paper-notebooks': 2,
+      'writing-correction': 3,
+      'art-craft-supplies': 4,
+      'school-essentials': 5,
+      'desk-organization': 6
+    };
+    this.categories = this.categories.map(category => ({
+      ...category,
+      itemCount: products.filter(product =>
+        product.category?.slug === category.slug || product.categoryId === categoryIds[category.slug]
+      ).length
+    }));
+    this.popularProducts = products.filter(product => product.isBestSeller || product.isFeatured);
+    this.newArrivalProducts = products.filter(product => product.isNewArrival).slice(0, 3);
+    if (this.popularProducts.length < 5) this.popularProducts = products;
+    if (this.newArrivalProducts.length === 0) this.newArrivalProducts = products.slice(0, 3);
   }
 }
 
