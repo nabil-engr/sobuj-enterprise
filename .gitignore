@@ -1,0 +1,20 @@
+# Node / Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.design-reference-*/
+
+# .NET build outputs
+**/bin/
+**/obj/
+backend/.verify-build/
+backend/.verify-obj/
+
+# Local secrets and environment configuration
+.env
+.env.*
+!*.example
+appsettings.Development.json
+appsettings.Production.json
+*.user
+.vs/

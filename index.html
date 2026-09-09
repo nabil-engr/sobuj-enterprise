@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobuj Enterprise - Clean Architecture Storefront with JWT Auth & WhatsApp Engine</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .stationery-glow { box-shadow: 0 20px 40px -15px rgba(5, 150, 105, 0.2); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP BAR -->
+  <header class="bg-emerald-950 text-white text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>🌿 <strong>Sobuj Enterprise:</strong> Official Distributor of Double A, Pilot, Faber-Castell & Deli</span>
+      </div>
+      <div class="flex items-center gap-4 text-emerald-200">
+        <span>⚡ Dhaka 24h Express Delivery</span>
+        <span>|</span>
+        <span>📞 Hotline: +880 1711-000000</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN NAVIGATION -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- LOGO -->
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-gradient-to-br from-emerald-600 to-teal-800 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-md">
+          S
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-tight text-slate-900 block leading-tight">SOBUJ</span>
+          <span class="text-[10px] font-bold tracking-widest text-emerald-700 uppercase">Enterprise</span>
+        </div>
+      </a>
+
+      <!-- SEARCH BAR -->
+      <div class="flex-1 max-w-xl hidden md:block">
+        <div class="relative">
+          <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Search 1,000+ pens, notebooks, copier paper, staplers, art supplies..." 
+                 class="w-full bg-slate-100 border border-slate-200 rounded-full py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white transition shadow-inner">
+          <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS & AUTH -->
+      <div class="flex items-center gap-3">
+        <!-- Auth Profile / Login Button -->
+        <div id="authNavSection">
+          <!-- Injected via updateAuthUI -->
+        </div>
+
+        <button onclick="toggleCart()" class="relative bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-md transition transform active:scale-95">
+          <span>🛒</span>
+          <span>Cart</span>
+          <span id="cartBadge" class="bg-amber-400 text-slate-950 text-xs font-black px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 rounded-3xl p-8 sm:p-12 text-white stationery-glow relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="md:w-3/5 space-y-5 z-10">
+        <div class="flex items-center gap-2">
+          <span class="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            Clean Architecture & Role Secured
+          </span>
+          <span class="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
+            JWT Auth Active
+          </span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black leading-tight">
+          Everything Your Office, School & Art Studio Needs.
+        </h1>
+        <p class="text-emerald-100 text-sm sm:text-base max-w-lg">
+          Double A Copier Paper, Pilot Gel Pens, Faber-Castell Art Sets, Deli Executive Organizers. Instant 1-click WhatsApp order confirmation.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a href="#catalogSection" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-6 py-3 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 text-sm">
+            Browse All Stationery ↓
+          </a>
+          <button onclick="openWhatsAppInquiry()" class="bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+            <span>💬</span> Quick WhatsApp Inquiry
+          </button>
+        </div>
+      </div>
+      <div class="md:w-2/5 flex justify-center z-10">
+        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600" alt="Stationery" class="rounded-2xl shadow-2xl border-4 border-white/10 max-h-72 object-cover">
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY TILES -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h2 class="text-xl font-extrabold text-slate-900 mb-4">Shop By Department</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="categoryGrid">
+      <!-- Injected via JS -->
+    </div>
+  </section>
+
+  <!-- CATALOG & DYNAMIC FILTERS SECTION -->
+  <section id="catalogSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1">
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+      
+      <!-- SIDEBAR FILTERS -->
+      <aside class="w-full lg:w-72 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 sticky top-28">
+        <div class="flex justify-between items-center border-b pb-3">
+          <h3 class="font-extrabold text-slate-900 text-base">🔍 Filters</h3>
+          <button onclick="resetFilters()" class="text-xs text-emerald-700 hover:underline font-semibold">Reset</button>
+        </div>
+
+        <!-- Price Slider -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Max Price: ৳<span id="priceLabel">1500</span></label>
+          <input type="range" min="100" max="1500" step="50" value="1500" id="priceRange" oninput="handlePriceChange(this.value)" class="w-full accent-emerald-600">
+          <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+            <span>৳100</span>
+            <span>৳1,500</span>
+          </div>
+        </div>
+
+        <!-- Brand Filter -->
+        <div class="border-t pt-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Brands</h4>
+          <div class="space-y-2" id="brandFilters">
+            <!-- Brand Checkboxes -->
+          </div>
+        </div>
+
+        <!-- Paper Size Filter -->
+        <div class="border-t pt-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Paper / Notebook Size</h4>
+          <div class="space-y-2" id="sizeFilters">
+            <!-- Size Checkboxes -->
+          </div>
+        </div>
+
+        <!-- Pen Tip Size -->
+        <div class="border-t pt-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Pen Nib / Tip Size</h4>
+          <div class="space-y-2" id="tipFilters">
+            <!-- Tip Checkboxes -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- PRODUCT CATALOG -->
+      <main class="flex-1 w-full">
+        <!-- Results Summary Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm gap-4">
+          <p class="text-xs font-semibold text-slate-500">
+            Showing <span id="productCount" class="font-bold text-emerald-800">0</span> stationery products
+          </p>
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold text-slate-500">Sort:</span>
+            <select id="sortSelect" onchange="handleSortChange(this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-emerald-600">
+              <option value="popular">Most Popular</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Highest Customer Rated</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="productsGrid">
+          <!-- Injected via JS -->
+        </div>
+      </main>
+
+    </div>
+  </section>
+
+  <!-- CART SLIDE-OVER DRAWER -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="toggleCart()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+          <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+            <span>🛒 Shopping Cart</span>
+          </h3>
+          <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cartItemsList">
+          <!-- Cart items injected here -->
+        </div>
+
+        <div class="p-6 border-t bg-slate-50 space-y-3">
+          <div class="flex justify-between text-sm text-slate-600">
+            <span>Subtotal</span>
+            <span id="cartSubtotal" class="font-bold text-slate-900">৳0</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Delivery Fee (Inside Dhaka)</span>
+            <span class="text-emerald-700 font-bold">৳60</span>
+          </div>
+          <div class="flex justify-between text-base font-extrabold text-slate-900 border-t pt-2">
+            <span>Total Payable</span>
+            <span id="cartTotal" class="text-emerald-800">৳60</span>
+          </div>
+          <button onclick="openCheckoutModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition">
+            Proceed to Checkout →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT & DYNAMIC WHATSAPP MODAL -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">Instant Order Checkout</h3>
+          <p class="text-xs text-slate-400">Cash on Delivery with 1-Click WhatsApp Verification</p>
+        </div>
+        <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Your Full Name / Company *</label>
+          <input type="text" id="custName" placeholder="e.g. Tanvir Ahmed / Green Tech" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp Phone Number *</label>
+            <input type="tel" id="custPhone" placeholder="017XXXXXXXX" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Order Type *</label>
+            <select id="orderTypeSelect" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500">
+              <option value="Standard_COD">Standard Retail (COD)</option>
+              <option value="Express_Delivery">Urgent Express Delivery</option>
+              <option value="Corporate_Bulk">Corporate Requisition</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Delivery Address *</label>
+          <textarea id="custAddress" rows="2" placeholder="House, Road, Area, Dhaka" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Order Notes (Optional)</label>
+          <input type="text" id="custNote" placeholder="e.g. Call before delivering, or Need official challan" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="placeOrderAndDispatchWhatsApp()" class="w-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+          <span>💬</span> Confirm Order & Send via WhatsApp →
+        </button>
+        <p class="text-[11px] text-slate-400 text-center mt-2">Dispatches your order into the system and opens WhatsApp with your pre-formatted order summary.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL (LOGIN & REGISTRATION WITH ROLES) -->
+  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 id="authModalTitle" class="text-xl font-extrabold text-slate-900">Sign In to Account</h3>
+          <p class="text-xs text-slate-400">Manage stationery orders & administrative tools</p>
+        </div>
+        <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div id="authFormSection" class="space-y-4 text-xs">
+        <div id="authNameField" class="hidden">
+          <label class="block font-bold text-slate-700 mb-1">Full Name *</label>
+          <input type="text" id="authName" placeholder="Full name" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Email Address *</label>
+          <input type="email" id="authEmail" value="admin@sobujenterprise.com" placeholder="name@example.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Password *</label>
+          <input type="password" id="authPassword" value="Admin@123" placeholder="••••••••" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+        </div>
+
+        <div id="authRoleField" class="hidden">
+          <label class="block font-bold text-slate-700 mb-1">Account Role</label>
+          <select id="authRole" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+            <option value="Customer">Customer</option>
+            <option value="Admin">Administrator</option>
+          </select>
+        </div>
+
+        <button onclick="handleAuthSubmit()" id="authSubmitBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition text-sm shadow-md">
+          Sign In
+        </button>
+
+        <div class="text-center pt-2">
+          <button onclick="toggleAuthMode()" id="authSwitchBtn" class="text-xs text-emerald-700 font-bold hover:underline">
+            Need an account? Register here
+          </button>
+        </div>
+
+        <div class="p-3 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
+          <p class="font-bold text-slate-700">💡 Preloaded Credentials:</p>
+          <p>• <strong>Admin:</strong> admin@sobujenterprise.com / Admin@123</p>
+          <p>• <strong>Customer:</strong> customer@example.com / Customer@123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN RESTRICTED PANEL MODAL -->
+  <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300">
+            Role: Admin [Authorize(Roles = "Admin")]
+          </span>
+          <h3 class="text-xl font-black text-slate-900 mt-1">Sobuj Enterprise Admin Center</h3>
+        </div>
+        <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <!-- Add Product Form -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+        <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider">+ Add New Product (Restricted to Admin Token)</h4>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-semibold mb-1">Product Title</label>
+            <input type="text" id="newTitle" placeholder="e.g. Kokuyo Camlin 24 Shade Pastels" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">SKU</label>
+            <input type="text" id="newSku" placeholder="ART-CAM-PST-24" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Price (৳)</label>
+            <input type="number" id="newPrice" placeholder="280" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Brand</label>
+            <input type="text" id="newBrand" placeholder="Kokuyo Camlin" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg">
+          </div>
+        </div>
+        <button onclick="addNewProductFromAdmin()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+          Add to Catalog
+        </button>
+      </div>
+
+      <!-- Recent Orders Review -->
+      <div>
+        <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider mb-3">Live Orders & WhatsApp Status</h4>
+        <div class="space-y-2" id="adminOrdersList">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
+      <div>
+        <h4 class="text-white font-black text-sm mb-2">SOBUJ ENTERPRISE</h4>
+        <p class="leading-relaxed">Official stationery distributor and supplier in Bangladesh. Clean Architecture, Secure JWT Authorization, and 1-click WhatsApp checkout engine.</p>
+      </div>
+      <div>
+        <h5 class="text-white font-bold mb-2 uppercase">Official Brands</h5>
+        <p>Double A Paper, Pilot Pens, Faber-Castell, Deli Office Gear, Zebra Sarasa, Doms.</p>
+      </div>
+      <div>
+        <h5 class="text-white font-bold mb-2 uppercase">Customer Support</h5>
+        <p>Hotline: +880 1711-000000<br>Delivery: Inside Dhaka ৳60 (24h) | Outside Dhaka ৳120</p>
+      </div>
+      <div>
+        <h5 class="text-white font-bold mb-2 uppercase">Security & Architecture</h5>
+        <p>Clean Domain-Driven Onion Architecture. Role-based ASP.NET Core Web API with Angular 18 features.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    const STORE_PHONE = "8801711000000";
+
+    // Authentication State
+    let currentUser = {
+      id: 1,
+      fullName: "Sobuj Enterprise Administrator",
+      email: "admin@sobujenterprise.com",
+      role: "Admin",
+      token: "mock-jwt-token-admin-role"
+    };
+
+    let isRegisterMode = false;
+
+    // Stationery Catalog Data
+    let products = [
+      { id: 1, title: "Double A Copier Paper A4 80 GSM (500 Sheets)", price: 520, origPrice: 560, brand: "Double A", size: "A4", tip: "", rating: 4.9, img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500" },
+      { id: 2, title: "Pilot G2 Premium Gel Roller Pen 0.5mm (Pack of 3)", price: 420, origPrice: 450, brand: "Pilot", size: "", tip: "0.5mm", rating: 5.0, img: "https://images.unsplash.com/photo-1585336261026-418071839958?w=500" },
+      { id: 3, title: "Deli Heavy Duty Desktop Stapler with 1000 Pins", price: 340, origPrice: 380, brand: "Deli", size: "", tip: "", rating: 4.8, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" },
+      { id: 4, title: "Faber-Castell Connector Paint Box 24 Colors", price: 880, origPrice: 950, brand: "Faber-Castell", size: "", tip: "", rating: 4.9, img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500" },
+      { id: 5, title: "Doms Neon Eraser & Pencil Combo Stationery Kit", price: 150, origPrice: 180, brand: "Doms", size: "", tip: "", rating: 4.7, img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500" },
+      { id: 6, title: "Zebra Sarasa Clip Gel Pen 0.5mm Vintage Colors", price: 175, origPrice: 190, brand: "Zebra", size: "", tip: "0.5mm", rating: 4.9, img: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=500" },
+      { id: 7, title: "Hardcover Spiral Dot Grid Journal A5 (160 Pages)", price: 380, origPrice: 420, brand: "Sobuj", size: "A5", tip: "", rating: 5.0, img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500" },
+      { id: 8, title: "Executive PU Leather Document Tray & Organizer", price: 1150, origPrice: 1250, brand: "Deli", size: "A4", tip: "", rating: 4.8, img: "https://images.unsplash.com/photo-1584727638096-042c45049ebe?w=500" }
+    ];
+
+    let orders = [
+      { id: 1, orderNumber: "SE-20260908-1001", customerName: "Tanvir Ahmed", phone: "01712345678", total: 940, status: "Pending", type: "Standard_COD" },
+      { id: 2, orderNumber: "SE-20260908-1002", customerName: "Green Tech Solutions", phone: "01811223344", total: 1490, status: "Confirmed", type: "Corporate_Bulk" }
+    ];
+
+    let cart = [];
+    let selectedBrands = [];
+    let selectedSizes = [];
+    let selectedTips = [];
+    let maxPriceFilter = 1500;
+    let currentSort = "popular";
+    let currentSearch = "";
+
+    function init() {
+      renderCategories();
+      renderFilters();
+      renderProducts();
+      updateAuthUI();
+      renderAdminOrders();
+    }
+
+    function renderCategories() {
+      const cats = [
+        { name: "Office Supplies", icon: "briefcase", img: "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=200" },
+        { name: "Paper & Books", icon: "book", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200" },
+        { name: "Writing & Pens", icon: "edit-3", img: "https://images.unsplash.com/photo-1585336261026-418071839958?w=200" },
+        { name: "Art & Crafts", icon: "palette", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=200" },
+        { name: "School Kits", icon: "smile", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200" },
+        { name: "Desk Storage", icon: "grid", img: "https://images.unsplash.com/photo-1584727638096-042c45049ebe?w=200" }
+      ];
+      document.getElementById("categoryGrid").innerHTML = cats.map(c => `
+        <div class="p-3 bg-white rounded-2xl border border-slate-200 text-center hover:border-emerald-500 hover:shadow-md transition cursor-pointer group">
+          <div class="w-12 h-12 rounded-full overflow-hidden mx-auto mb-2 bg-emerald-50 group-hover:scale-105 transition">
+            <img src="${c.img}" alt="${c.name}" class="w-full h-full object-cover">
+          </div>
+          <h4 class="text-xs font-bold text-slate-800 group-hover:text-emerald-700 transition">${c.name}</h4>
+        </div>
+      `).join("");
+    }
+
+    function renderFilters() {
+      const brands = ["Double A", "Pilot", "Deli", "Faber-Castell", "Zebra", "Doms"];
+      document.getElementById("brandFilters").innerHTML = brands.map(b => `
+        <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer hover:text-slate-900">
+          <input type="checkbox" value="${b}" onchange="toggleBrand('${b}')" class="rounded text-emerald-600 focus:ring-emerald-500">
+          <span>${b}</span>
+        </label>
+      `).join("");
+
+      const sizes = ["A4", "A5", "Legal"];
+      document.getElementById("sizeFilters").innerHTML = sizes.map(s => `
+        <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer hover:text-slate-900">
+          <input type="checkbox" value="${s}" onchange="toggleSize('${s}')" class="rounded text-emerald-600 focus:ring-emerald-500">
+          <span>${s}</span>
+        </label>
+      `).join("");
+
+      const tips = ["0.38mm", "0.5mm", "0.7mm"];
+      document.getElementById("tipFilters").innerHTML = tips.map(t => `
+        <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer hover:text-slate-900">
+          <input type="checkbox" value="${t}" onchange="toggleTip('${t}')" class="rounded text-emerald-600 focus:ring-emerald-500">
+          <span>${t}</span>
+        </label>
+      `).join("");
+    }
+
+    function renderProducts() {
+      let filtered = products.filter(p => p.price <= maxPriceFilter);
+
+      if (selectedBrands.length > 0) filtered = filtered.filter(p => selectedBrands.includes(p.brand));
+      if (selectedSizes.length > 0) filtered = filtered.filter(p => selectedSizes.includes(p.size));
+      if (selectedTips.length > 0) filtered = filtered.filter(p => selectedTips.includes(p.tip));
+      if (currentSearch) {
+        const s = currentSearch.toLowerCase();
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(s) || p.brand.toLowerCase().includes(s));
+      }
+
+      if (currentSort === "price_asc") filtered.sort((a, b) => a.price - b.price);
+      else if (currentSort === "price_desc") filtered.sort((a, b) => b.price - a.price);
+      else if (currentSort === "rating") filtered.sort((a, b) => b.rating - a.rating);
+
+      document.getElementById("productCount").innerText = filtered.length;
+
+      const grid = document.getElementById("productsGrid");
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-3 text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">No products found matching filters.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-300 transition duration-300 p-4 flex flex-col justify-between group">
+          <div>
+            <div class="relative overflow-hidden rounded-xl bg-slate-50 mb-3 h-44 flex items-center justify-center">
+              <img src="${p.img}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+              ${p.origPrice > p.price ? `<span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow">SAVE ৳${p.origPrice - p.price}</span>` : ''}
+            </div>
+            <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">${p.brand}</span>
+            <h3 class="font-bold text-slate-800 text-sm mt-0.5 line-clamp-2">${p.title}</h3>
+            <div class="flex items-center gap-1 text-amber-500 text-xs mt-1">
+              <span>★ ${p.rating}</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div>
+              <span class="text-base font-black text-slate-900">৳${p.price}</span>
+              ${p.origPrice > p.price ? `<span class="text-xs text-slate-400 line-through ml-1">৳${p.origPrice}</span>` : ''}
+            </div>
+            <button onclick="addToCart(${p.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow active:scale-95">
+              + Add
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function toggleBrand(b) {
+      if (selectedBrands.includes(b)) selectedBrands = selectedBrands.filter(x => x !== b);
+      else selectedBrands.push(b);
+      renderProducts();
+    }
+    function toggleSize(s) {
+      if (selectedSizes.includes(s)) selectedSizes = selectedSizes.filter(x => x !== s);
+      else selectedSizes.push(s);
+      renderProducts();
+    }
+    function toggleTip(t) {
+      if (selectedTips.includes(t)) selectedTips = selectedTips.filter(x => x !== t);
+      else selectedTips.push(t);
+      renderProducts();
+    }
+    function handlePriceChange(v) {
+      maxPriceFilter = parseInt(v);
+      document.getElementById("priceLabel").innerText = v;
+      renderProducts();
+    }
+    function handleSearch(v) {
+      currentSearch = v;
+      renderProducts();
+    }
+    function handleSortChange(v) {
+      currentSort = v;
+      renderProducts();
+    }
+    function resetFilters() {
+      selectedBrands = [];
+      selectedSizes = [];
+      selectedTips = [];
+      maxPriceFilter = 1500;
+      currentSearch = "";
+      document.getElementById("priceRange").value = 1500;
+      document.getElementById("priceLabel").innerText = "1500";
+      document.getElementById("searchInput").value = "";
+      document.querySelectorAll("aside input[type=checkbox]").forEach(cb => cb.checked = false);
+      renderProducts();
+    }
+
+    // Cart Management
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      const exist = cart.find(c => c.product.id === id);
+      if (exist) exist.quantity += 1;
+      else cart.push({ product: item, quantity: 1 });
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((a, b) => a + b.quantity, 0);
+      document.getElementById("cartBadge").innerText = count;
+
+      const subtotal = cart.reduce((a, b) => a + (b.product.price * b.quantity), 0);
+      document.getElementById("cartSubtotal").innerText = `৳${subtotal}`;
+      document.getElementById("cartTotal").innerText = `৳${subtotal + (subtotal > 0 ? 60 : 0)}`;
+
+      const list = document.getElementById("cartItemsList");
+      if (cart.length === 0) {
+        list.innerHTML = `<p class="text-xs text-slate-400 text-center py-10">Your cart is empty.</p>`;
+        return;
+      }
+
+      list.innerHTML = cart.map(c => `
+        <div class="flex justify-between items-center text-xs border-b pb-3">
+          <div class="max-w-[200px]">
+            <p class="font-bold text-slate-800 truncate">${c.product.title}</p>
+            <p class="text-slate-400">Qty: ${c.quantity} × ৳${c.product.price}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-slate-900">৳${c.product.price * c.quantity}</span>
+            <button onclick="removeFromCart(${c.product.id})" class="text-red-500 font-bold hover:underline">✕</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.product.id !== id);
+      updateCartUI();
+    }
+
+    function toggleCart(forceOpen = false) {
+      const drawer = document.getElementById("cartDrawer");
+      if (forceOpen) drawer.classList.remove("hidden");
+      else drawer.classList.toggle("hidden");
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        alert("Please add items to your cart first!");
+        return;
+      }
+      toggleCart(false);
+      if (currentUser) {
+        document.getElementById("custName").value = currentUser.fullName;
+      }
+      document.getElementById("checkoutModal").classList.remove("hidden");
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById("checkoutModal").classList.add("hidden");
+    }
+
+    // Dynamic WhatsApp Order Engine
+    function placeOrderAndDispatchWhatsApp() {
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const address = document.getElementById("custAddress").value.trim();
+      const orderType = document.getElementById("orderTypeSelect").value;
+      const note = document.getElementById("custNote").value.trim() || "None";
+
+      if (!name || !phone || !address) {
+        alert("Please fill in Name, Phone, and Delivery Address!");
+        return;
+      }
+
+      const orderId = `SE-${Math.floor(100000 + Math.random() * 900000)}`;
+      const subtotal = cart.reduce((a, b) => a + (b.product.price * b.quantity), 0);
+      const total = subtotal + 60;
+
+      const itemsList = cart.map(c => `• ${c.product.title} × ${c.quantity} = ৳${c.product.price * c.quantity}`).join("\n");
+
+      let message = "";
+      if (orderType === "Express_Delivery") {
+        message = `🚨 *URGENT ORDER* - Sobuj Enterprise!\n\n⚡ *Order ID:* #${orderId}\n👤 *Recipient:* ${name}\n📞 *Phone:* ${phone}\n📍 *Address:* ${address}\n💵 *Payable:* ৳${total}\n\n📋 *Urgent Items:*\n${itemsList}\n\n📝 *Note:* ${note}\nPlease dispatch immediately. Thanks!`;
+      } else if (orderType === "Corporate_Bulk") {
+        message = `🏢 *CORPORATE REQUISITION* - Sobuj Enterprise\n\n📑 *Requisition No:* #${orderId}\n👤 *Company / Person:* ${name}\n📞 *Phone:* ${phone}\n📍 *Address:* ${address}\n📊 *Estimate:* ৳${total}\n\n📝 *Items Details:*\n${itemsList}\n\n📝 *Note:* ${note}\nPlease issue official challan with consignment.`;
+      } else {
+        message = `👋 Hello Sobuj Enterprise!\nI placed an order on your website.\n\n🛒 *Order ID:* #${orderId}\n👤 *Customer:* ${name}\n📞 *Phone:* ${phone}\n📍 *Address:* ${address}\n💰 *Total Payable:* ৳${total} (Cash on Delivery)\n\n📦 *Items:*\n${itemsList}\n\n📝 *Note:* ${note}\nPlease confirm my order. Thank you!`;
+      }
+
+      // Add to admin orders stream
+      orders.unshift({
+        id: orders.length + 1,
+        orderNumber: orderId,
+        customerName: name,
+        phone: phone,
+        total: total,
+        status: "Pending",
+        type: orderType
+      });
+      renderAdminOrders();
+
+      const waUrl = `https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, "_blank");
+
+      cart = [];
+      updateCartUI();
+      closeCheckoutModal();
+      alert(`Order #${orderId} submitted! Dispatched in real-time. Opening WhatsApp confirmation window.`);
+    }
+
+    function openWhatsAppInquiry() {
+      const msg = `Hello Sobuj Enterprise, I would like to inquire about office & school stationery supplies.`;
+      window.open(`https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    // Auth & Role-Based UI Handling
+    function updateAuthUI() {
+      const authNav = document.getElementById("authNavSection");
+      if (currentUser) {
+        authNav.innerHTML = `
+          <div class="flex items-center gap-2">
+            ${currentUser.role === 'Admin' ? `
+              <button onclick="toggleAdminModal()" class="px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 rounded-xl transition border border-amber-300">
+                ⚙️ Admin Center
+              </button>
+            ` : ''}
+            <span class="text-xs text-slate-600 hidden sm:inline">Hi, <strong>${currentUser.fullName.split(" ")[0]}</strong></span>
+            <button onclick="logout()" class="text-xs text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl font-bold transition border border-red-200">
+              Logout
+            </button>
+          </div>
+        `;
+      } else {
+        authNav.innerHTML = `
+          <button onclick="toggleAuthModal()" class="px-3.5 py-2 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition border border-emerald-200">
+            Sign In
+          </button>
+        `;
+      }
+    }
+
+    function toggleAuthModal() {
+      document.getElementById("authModal").classList.toggle("hidden");
+    }
+
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById("authModalTitle").innerText = isRegisterMode ? "Create Customer Account" : "Sign In to Account";
+      document.getElementById("authSubmitBtn").innerText = isRegisterMode ? "Register Account" : "Sign In";
+      document.getElementById("authSwitchBtn").innerText = isRegisterMode ? "Already registered? Sign in" : "Need an account? Register here";
+      document.getElementById("authNameField").classList.toggle("hidden", !isRegisterMode);
+      document.getElementById("authRoleField").classList.toggle("hidden", !isRegisterMode);
+    }
+
+    function handleAuthSubmit() {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value.trim();
+
+      if (isRegisterMode) {
+        const name = document.getElementById("authName").value.trim();
+        const role = document.getElementById("authRole").value;
+        if (!name || !email || !password) {
+          alert("Please fill all required registration fields");
+          return;
+        }
+        currentUser = {
+          id: 99,
+          fullName: name,
+          email: email,
+          role: role,
+          token: `mock-token-${role.toLowerCase()}`
+        };
+        alert(`Account created successfully as ${role}!`);
+      } else {
+        if (email === "admin@sobujenterprise.com" && password === "Admin@123") {
+          currentUser = {
+            id: 1,
+            fullName: "Sobuj Enterprise Administrator",
+            email: email,
+            role: "Admin",
+            token: "admin-token-jwt-12345"
+          };
+          alert("Logged in as Administrator! Admin Center unlocked.");
+        } else if (email === "customer@example.com" && password === "Customer@123") {
+          currentUser = {
+            id: 2,
+            fullName: "Tanvir Ahmed",
+            email: email,
+            role: "Customer",
+            token: "customer-token-jwt-12345"
+          };
+          alert("Logged in as Customer!");
+        } else {
+          alert("Invalid credentials! Please use the sample credentials shown below.");
+          return;
+        }
+      }
+
+      updateAuthUI();
+      toggleAuthModal();
+    }
+
+    function logout() {
+      currentUser = null;
+      updateAuthUI();
+      alert("Logged out successfully.");
+    }
+
+    // Admin Center Functions
+    function toggleAdminModal() {
+      if (!currentUser || currentUser.role !== "Admin") {
+        alert("Access Denied: [Authorize(Roles = 'Admin')] is required. Please sign in as Admin.");
+        toggleAuthModal();
+        return;
+      }
+      document.getElementById("adminModal").classList.toggle("hidden");
+    }
+
+    function addNewProductFromAdmin() {
+      if (!currentUser || currentUser.role !== "Admin") {
+        alert("Unauthorized! Only Administrators can create products.");
+        return;
+      }
+
+      const title = document.getElementById("newTitle").value.trim();
+      const sku = document.getElementById("newSku").value.trim();
+      const price = parseInt(document.getElementById("newPrice").value);
+      const brand = document.getElementById("newBrand").value.trim() || "Sobuj";
+
+      if (!title || !price) {
+        alert("Please enter at least Title and Price.");
+        return;
+      }
+
+      products.unshift({
+        id: products.length + 1,
+        title: title,
+        price: price,
+        origPrice: price + 40,
+        brand: brand,
+        size: "A4",
+        tip: "0.5mm",
+        rating: 5.0,
+        img: "https://images.unsplash.com/photo-1585336261026-418071839958?w=500"
+      });
+
+      renderProducts();
+      toggleAdminModal();
+      alert(`Product "${title}" added to catalog under [Authorize(Roles = 'Admin')]!`);
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById("adminOrdersList");
+      if (!container) return;
+
+      container.innerHTML = orders.map(o => `
+        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+          <div>
+            <span class="font-mono font-bold text-emerald-800">#${o.orderNumber}</span>
+            <p class="font-bold text-slate-800">${o.customerName} (${o.phone})</p>
+            <span class="text-[10px] text-slate-400">Type: ${o.type}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-slate-900">৳${o.total}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${o.status === 'Pending' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+              ${o.status}
+            </span>
+            <button onclick="markOrderConfirmed(${o.id})" class="text-[11px] text-emerald-700 hover:underline font-bold">
+              Confirm
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function markOrderConfirmed(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (o) {
+        o.status = "Confirmed";
+        renderAdminOrders();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
