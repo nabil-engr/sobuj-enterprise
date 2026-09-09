@@ -142,6 +142,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<OrderNotificationHub>("/hubs/orders");
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapFallbackToFile("index.html");
 
 app.Run();
