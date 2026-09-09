@@ -14,6 +14,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=backend-build /app/publish ./
 COPY --from=frontend-build /src/frontend/dist/sobuj-enterprise-ui/browser ./wwwroot/
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:10000
+EXPOSE 10000
 ENTRYPOINT ["dotnet", "SobujEnterprise.Api.dll"]
