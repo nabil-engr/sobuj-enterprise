@@ -139,15 +139,15 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
           <div class="animate-marquee-rtl flex items-center gap-3">
             <!-- First Set -->
             @for (b of displayBrands; track $index) {
-              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
+                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-5 w-5 rounded object-contain" />
                 <span>{{ b.name }}</span>
               </a>
             }
             <!-- Seamless Duplicate Loop Set -->
             @for (b of displayBrands; track 'loop-' + $index) {
-              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
+                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-5 w-5 rounded object-contain" />
                 <span>{{ b.name }}</span>
               </a>
             }
@@ -565,20 +565,20 @@ export class HomeComponent implements OnInit {
     { name: 'Desk Storage', slug: 'desk-organization', itemCount: 0, icon: 'desktop_windows' }
   ];
 
-  displayBrands: { id?: number; name: string; slug?: string }[] = [
-    { name: 'Double A' },
-    { name: 'Pilot Japan' },
-    { name: 'Deli Office' },
-    { name: 'Faber-Castell' },
-    { name: 'Matador' },
-    { name: 'Good Luck' },
-    { name: 'Fresh' },
-    { name: 'Doms' },
-    { name: 'Kangaro' },
-    { name: 'Zebra' },
-    { name: 'Casio' },
-    { name: 'Uni-ball' }
+  displayBrands: { id?: number; name: string; slug?: string; logoUrl?: string; website?: string }[] = [
+    { name: 'Double A', website: 'doubleapaper.com' }, { name: 'Pilot', website: 'pilotpen.com' },
+    { name: 'Deli', website: 'deliworld.com' }, { name: 'Faber-Castell', website: 'faber-castell.com' },
+    { name: 'Matador', website: 'matador.com.bd' }, { name: 'Good Luck', website: 'prangroup.com' },
+    { name: 'Fresh', website: 'mgi.org' }, { name: 'Doms', website: 'domsindia.com' },
+    { name: 'Kangaro', website: 'kangaro.com' }, { name: 'Zebra', website: 'zebrapen.com' },
+    { name: 'Casio', website: 'casio.com' }, { name: 'Uni-ball', website: 'uniball.com' }
   ];
+
+  brandLogo(brand: { logoUrl?: string; website?: string }): string {
+    if (brand.logoUrl) return brand.logoUrl;
+    const domain = (brand.website || '').replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    return domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128` : '';
+  }
 
   popularProducts: Product[] = [];
   newArrivalProducts: Product[] = [];
