@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using SobujEnterprise.Application.Interfaces;
 using SobujEnterprise.Application.Services;
 using SobujEnterprise.Infrastructure.Authentication;
@@ -15,6 +16,24 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration["DATABASE_URL"]
     ?? throw new InvalidOperationException("Set ConnectionStrings__DefaultConnection to the Neon PostgreSQL connection string.");
+
+// Neon shows connection strings as postgresql:// URLs. Npgsql's EF provider
+// expects key/value form, so accept either form safely in deployment settings.
+if (connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase)
+    || connectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+{
+    var databaseUri = new Uri(connectionString);
+    var credentials = databaseUri.UserInfo.Split(':', 2);
+    connectionString = new NpgsqlConnectionStringBuilder
+    {
+        Host = databaseUri.Host,
+        Port = databaseUri.IsDefaultPort ? 5432 : databaseUri.Port,
+        Database = databaseUri.AbsolutePath.Trim('/'),
+        Username = Uri.UnescapeDataString(credentials[0]),
+        Password = credentials.Length > 1 ? Uri.UnescapeDataString(credentials[1]) : string.Empty,
+        SslMode = SslMode.Require
+    }.ConnectionString;
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
@@ -38,17 +57,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev", policy =>
     {
-        var origins = builder.Configuration["Cors:AllowedOrigins"]?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            ?? new[]
-            {
-                "http://localhost:4200",
-                "https://localhost:4200",
-                "https://sobuj-enterprise-ku7h8m301-nabil121.vercel.app"
-            };
-        policy.WithOrigins(origins)
+        policy.SetIsOriginAllowed(origin =>
+              Uri.TryCreate(origin, UriKind.Absolute, out var uri)
+              && (uri.Host is "localhost" or "127.0.0.1" || uri.Host.EndsWith("-nabil121.vercel.app", StringComparison.OrdinalIgnoreCase)))
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
     });
 });
 
