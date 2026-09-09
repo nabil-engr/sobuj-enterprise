@@ -63,7 +63,10 @@ builder.Services.AddCors(options =>
     {
         policy.SetIsOriginAllowed(origin =>
               Uri.TryCreate(origin, UriKind.Absolute, out var uri)
-              && (uri.Host is "localhost" or "127.0.0.1" || uri.Host.EndsWith("-nabil121.vercel.app", StringComparison.OrdinalIgnoreCase)))
+              && (uri.Host is "localhost" or "127.0.0.1"
+                  || uri.Host.Equals("sobuj-enterprise.vercel.app", StringComparison.OrdinalIgnoreCase)
+                  || (uri.Host.StartsWith("sobuj-enterprise-", StringComparison.OrdinalIgnoreCase)
+                      && uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))))
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
