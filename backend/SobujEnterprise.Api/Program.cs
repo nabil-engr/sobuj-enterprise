@@ -39,7 +39,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularDev", policy =>
     {
         var origins = builder.Configuration["Cors:AllowedOrigins"]?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            ?? new[] { "http://localhost:4200", "https://localhost:4200" };
+            ?? new[]
+            {
+                "http://localhost:4200",
+                "https://localhost:4200",
+                "https://sobuj-enterprise-ku7h8m301-nabil121.vercel.app"
+            };
         policy.WithOrigins(origins)
               .AllowAnyHeader()
               .AllowAnyMethod()
