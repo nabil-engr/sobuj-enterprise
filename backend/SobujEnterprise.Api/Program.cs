@@ -35,6 +35,13 @@ if (connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreC
     }.ConnectionString;
 }
 
+var neonConnection = new NpgsqlConnectionStringBuilder(connectionString);
+if (neonConnection.SslMode == SslMode.Disable)
+{
+    neonConnection.SslMode = SslMode.Require;
+}
+connectionString = neonConnection.ConnectionString;
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
