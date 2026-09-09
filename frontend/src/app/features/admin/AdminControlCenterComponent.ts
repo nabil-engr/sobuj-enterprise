@@ -97,7 +97,7 @@ type Section = 'overview'|'orders'|'products'|'categories'|'brands'|'filters'|'t
                     <label>Brand<select [(ngModel)]="productDraft.brandId" name="brandId"><option [ngValue]="null">No brand</option>@for(b of brands(); track b.id){<option [ngValue]="b.id">{{b.name}}</option>}</select></label>
                     <label>Regular price (৳) *<input required min="0" type="number" [(ngModel)]="productDraft.price" name="price"></label>
                     <label>Discount price (৳)<input min="0" type="number" [(ngModel)]="productDraft.discountPrice" name="discountPrice"></label>
-                    <label class="sm:col-span-2">Wholesale tiers <span class="text-slate-400 font-normal">(JSON: [{&quot;minQuantity&quot;:12,&quot;unitPrice&quot;:500}])</span><textarea [(ngModel)]="productDraft.wholesaleTiersJson" name="wholesaleTiersJson" rows="2" placeholder='[{"minQuantity": 12, "unitPrice": 500}, {"minQuantity": 48, "unitPrice": 470}]'></textarea></label>
+                    <label class="sm:col-span-2">Wholesale tiers <span class="text-slate-400 font-normal">(quantity and unit-price JSON list)</span><textarea [(ngModel)]="productDraft.wholesaleTiersJson" name="wholesaleTiersJson" rows="2" [placeholder]="wholesaleExample"></textarea></label>
                     <label>Stock quantity *<input required min="0" type="number" [(ngModel)]="productDraft.stockQuantity" name="stockQuantity"></label>
                     <label>Low stock alert<input min="0" type="number" [(ngModel)]="productDraft.lowStockThreshold" name="lowStockThreshold"></label>
                     <label class="sm:col-span-2">Short description<textarea [(ngModel)]="productDraft.shortDescription" name="shortDescription" rows="2"></textarea></label>
@@ -124,6 +124,7 @@ export class AdminControlCenterComponent implements OnInit {
   section=signal<Section>('overview'); message=signal(''); orders=signal<Order[]>([]); products=signal<Product[]>([]); categories=signal<any[]>([]); brands=signal<any[]>([]); filters=signal<any[]>([]); templates=signal<any[]>([]); users=signal<any[]>([]);
   productFormOpen=signal(false); imageUploading=signal(false); savingProduct=signal(false); formError=signal(''); editingProductId:number|null=null;
   productDraft:any=this.emptyProduct();
+  wholesaleExample='[{"minQuantity":12,"unitPrice":500},{"minQuantity":48,"unitPrice":470}]';
   menu:any[]=[{key:'overview',label:'Overview',icon:'dashboard'},{key:'orders',label:'Orders & Dispatch',icon:'receipt_long'},{key:'products',label:'Products & Inventory',icon:'inventory_2'},{key:'categories',label:'Categories',icon:'category'},{key:'brands',label:'Brands',icon:'verified'},{key:'filters',label:'Smart Filters',icon:'filter_alt'},{key:'templates',label:'WhatsApp Templates',icon:'chat'},{key:'users',label:'Users & Roles',icon:'manage_accounts'},{key:'settings',label:'Store Settings',icon:'settings'}];
   ngOnInit(){this.refresh()}
   get title(){return this.menu.find(x=>x.key===this.section())?.label||'Admin'}
