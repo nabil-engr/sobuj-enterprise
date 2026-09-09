@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateOrderDto, OrderResponseDto, Order } from '../models/models';
+import { CreateOrderDto, OrderResponseDto, Order } from '../models';
 import { apiBaseUrl } from '../config/api.config';
 
 @Injectable({

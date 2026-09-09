@@ -9,7 +9,7 @@ import { RouterModule, Router } from '@angular/router';
 import { OrderService } from '../../core/services/order.service';
 import { ProductService } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Order, Product } from '../../core/models/models';
+import { Order, Product } from '../../core/models';
 
 @Component({
   selector: 'app-admin-dashboard',

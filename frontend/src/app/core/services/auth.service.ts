@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { AuthResponse, User, UserAddress } from '../models/models';
+import { AuthResponse, User, UserAddress } from '../models';
 import { apiBaseUrl } from '../config/api.config';
 
 @Injectable({

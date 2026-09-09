@@ -1,23 +1,32 @@
-import { Routes } from '@angular/router';
-import { HomeComponent, ShopComponent } from './features/shop/StorefrontComponents';
-import { ProductDetailComponent } from './features/shop/ProductDetailComponent';
-import { CheckoutComponent } from './features/checkout/CheckoutComponent';
-import { LoginComponent, RegisterComponent, UserAccountComponent } from './features/auth/AuthComponents';
-import { AdminControlCenterComponent } from './features/admin/AdminControlCenterComponent';
-import { authGuard, adminGuard } from './core/guards/auth.guard';
+import { Routes } from "@angular/router";
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'shop', component: ShopComponent },
-  { path: 'product/:id', component: ProductDetailComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'auth/login', component: LoginComponent },
-  { path: 'auth/register', component: RegisterComponent },
-  { path: 'account', component: UserAccountComponent, canActivate: [authGuard] },
-  { 
-    path: 'admin', 
-    component: AdminControlCenterComponent,
-    canActivate: [adminGuard]
+  {
+    path: "",
+    loadChildren: () =>
+      import("./features/shop/shop.routes").then((m) => m.SHOP_ROUTES),
   },
-  { path: '**', redirectTo: '' }
+  {
+    path: "checkout",
+    loadChildren: () =>
+      import("./features/checkout/checkout.routes").then(
+        (m) => m.CHECKOUT_ROUTES,
+      ),
+  },
+  {
+    path: "auth",
+    loadChildren: () =>
+      import("./features/auth/auth.routes").then((m) => m.AUTH_ROUTES),
+  },
+  {
+    path: "account",
+    loadChildren: () =>
+      import("./features/account/account.routes").then((m) => m.ACCOUNT_ROUTES),
+  },
+  {
+    path: "admin",
+    loadChildren: () =>
+      import("./features/admin/admin.routes").then((m) => m.ADMIN_ROUTES),
+  },
+  { path: "**", redirectTo: "" },
 ];

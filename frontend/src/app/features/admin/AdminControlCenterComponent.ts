@@ -7,7 +7,7 @@ import { AuthService } from "../../core/services/auth.service";
 import { apiBaseUrl } from "../../core/config/api.config";
 import { OrderService } from "../../core/services/order.service";
 import { ProductService } from "../../core/services/product.service";
-import { Order, Product } from "../../core/models/models";
+import { Order, Product } from "../../core/models";
 
 type Section =
   | "overview"

@@ -8,7 +8,7 @@ import { RouterModule, ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { ProductService } from "../../core/services/product.service";
 import { CartService } from "../../core/services/cart.service";
-import { Product } from "../../core/models/models";
+import { Product } from "../../core/models";
 
 @Component({
   selector: "app-product-detail",

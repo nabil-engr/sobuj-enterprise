@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
-import { OrderResponseDto, CreateOrderDto } from '../../core/models/models';
+import { OrderResponseDto, CreateOrderDto } from '../../core/models';
 
 @Component({
   selector: 'app-checkout',

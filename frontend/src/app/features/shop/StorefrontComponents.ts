@@ -8,7 +8,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
 import { ProductService } from '../../core/services/product.service';
-import { Product, FilterAttribute } from '../../core/models/models';
+import { Product, FilterAttribute } from '../../core/models';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 
 // ----------------------------------------------------------------------------
