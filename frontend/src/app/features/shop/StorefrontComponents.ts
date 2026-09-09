@@ -124,7 +124,7 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
     </section>
 
     <!-- 2. OFFICIAL BRAND PARTNERS STRIP - SMOOTH RIGHT-TO-LEFT MARQUEE -->
-    <section class="w-full bg-[#eaedff]/60 border-y border-slate-200/60 py-4 overflow-hidden">
+    <section class="w-full bg-[#eaedff]/60 border-y border-slate-200/60 py-5 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center gap-4">
         <div class="flex items-center gap-2 flex-shrink-0 z-10 bg-[#eaedff]/80 md:bg-transparent pr-3">
           <span class="material-symbols-outlined text-[#006c4e] text-[22px]">verified</span>
@@ -136,18 +136,18 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 
         <!-- Marquee Track (Smooth right-to-left animation) -->
         <div class="flex-1 w-full overflow-hidden relative">
-          <div class="animate-marquee-rtl flex items-center gap-3">
+          <div class="animate-marquee-rtl flex items-center gap-4">
             <!-- First Set -->
             @for (b of displayBrands; track $index) {
-              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
-                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-5 w-5 rounded object-contain" />
+              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-3 px-4 py-2.5 bg-white hover:bg-emerald-50 rounded-2xl shadow-sm text-sm font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
+                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-9 w-12 rounded object-contain" />
                 <span>{{ b.name }}</span>
               </a>
             }
             <!-- Seamless Duplicate Loop Set -->
             @for (b of displayBrands; track 'loop-' + $index) {
-              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-emerald-50 rounded-xl shadow-sm text-xs font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
-                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-5 w-5 rounded object-contain" />
+              <a [routerLink]="['/shop']" [queryParams]="{search: b.name}" class="flex-shrink-0 inline-flex items-center gap-3 px-4 py-2.5 bg-white hover:bg-emerald-50 rounded-2xl shadow-sm text-sm font-black text-[#003527] border border-slate-200/80 transition-all hover:scale-105">
+                <img [src]="brandLogo(b)" [alt]="b.name + ' logo'" (error)="$any($event.target).style.display='none'" class="h-9 w-12 rounded object-contain" />
                 <span>{{ b.name }}</span>
               </a>
             }
