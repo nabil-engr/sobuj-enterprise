@@ -178,6 +178,17 @@ import { Product } from "../../core/models/models";
                   <span class="material-symbols-outlined text-[18px]">check_circle</span>
                   <span>Ready for Same-Day Express Dispatch</span>
                 </div>
+                @if (wholesaleTiers(prod).length) {
+                  <div class="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+                    <div class="flex items-center gap-1.5 text-xs font-black text-[#006c4e] mb-2"><span class="material-symbols-outlined text-[17px]">inventory_2</span> Wholesale price breaks</div>
+                    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      @for (tier of wholesaleTiers(prod); track tier.minQuantity) {
+                        <div class="rounded-lg bg-white px-2 py-2 text-center border border-emerald-100"><div class="text-[10px] text-slate-500">{{ tier.minQuantity }}+ units</div><div class="text-sm font-black text-[#003527]">৳{{ tier.unitPrice }}</div><div class="text-[10px] text-emerald-700">per unit</div></div>
+                      }
+                    </div>
+                    <p class="mt-2 text-[11px] font-semibold text-[#006c4e]">{{ quantity() >= wholesaleTiers(prod)[0].minQuantity ? 'Wholesale rate applied to your quantity.' : 'Increase quantity to unlock wholesale rates.' }}</p>
+                  </div>
+                }
               </div>
 
               <!-- Description -->
@@ -230,7 +241,7 @@ import { Product } from "../../core/models/models";
                     Subtotal:
                     <strong class="text-base text-[#003527]"
                       >৳{{
-                        (prod.discountPrice || prod.price) * quantity()
+                        unitPrice(prod) * quantity()
                       }}</strong
                     >
                   </span>
@@ -387,17 +398,26 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(prod: Product): void {
-    for (let i = 0; i < this.quantity(); i++) {
-      this.cartService.addToCart(prod);
-    }
+    this.cartService.addToCart(prod, this.quantity());
     this.cartService.isDrawerOpen.set(true);
   }
 
   getWhatsAppUrl(prod: Product): string {
-    const unitPrice = prod.discountPrice || prod.price;
+    const unitPrice = this.unitPrice(prod);
     const text = encodeURIComponent(
       `Hello Sobuj Enterprise, I would like to order:\n\n*${prod.title}*\nSKU: ${prod.sku}\nQuantity: ${this.quantity()}\nUnit Price: ৳${unitPrice}\nTotal: ৳${unitPrice * this.quantity()}\n\nPlease confirm availability and delivery destination.`
     );
     return `https://wa.me/8801827801872?text=${text}`;
+  }
+
+  wholesaleTiers(prod: Product): { minQuantity: number; unitPrice: number }[] {
+    try {
+      return (JSON.parse(prod.wholesaleTiersJson || '[]') as { minQuantity: number; unitPrice: number }[])
+        .filter(t => t.minQuantity > 0 && t.unitPrice > 0).sort((a, b) => a.minQuantity - b.minQuantity);
+    } catch { return []; }
+  }
+
+  unitPrice(prod: Product): number {
+    return this.cartService.getUnitPrice(prod, this.quantity());
   }
 }

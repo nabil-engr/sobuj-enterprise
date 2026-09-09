@@ -53,6 +53,7 @@ export interface Product {
   rating: number;
   reviewCount: number;
   tags?: string;
+  wholesaleTiersJson?: string;
   variants?: ProductVariant[];
   galleryImages?: { id: number; imageUrl: string; displayOrder: number }[];
 }

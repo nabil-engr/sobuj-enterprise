@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.SignalR;
@@ -206,6 +207,7 @@ namespace SobujEnterprise.Application.Services
             existing.Description = product.Description;
             existing.Price = product.Price;
             existing.DiscountPrice = product.DiscountPrice;
+            existing.WholesaleTiersJson = product.WholesaleTiersJson;
             existing.StockQuantity = product.StockQuantity;
             existing.CategoryId = product.CategoryId;
             existing.BrandId = product.BrandId;
@@ -323,7 +325,7 @@ namespace SobujEnterprise.Application.Services
                     throw new InvalidOperationException($"Only {product.StockQuantity} unit(s) of '{product.Title}' are available.");
                 }
 
-                decimal unitPrice = product.DiscountPrice ?? product.Price;
+                decimal unitPrice = GetWholesaleUnitPrice(product, item.Quantity);
                 decimal lineTotal = unitPrice * item.Quantity;
                 subTotal += lineTotal;
 
@@ -370,6 +372,25 @@ namespace SobujEnterprise.Application.Services
                 TotalAmount = order.TotalAmount,
                 WhatsAppOrderUrl = whatsAppUrl
             };
+        }
+
+        private static decimal GetWholesaleUnitPrice(Product product, int quantity)
+        {
+            var retailPrice = product.DiscountPrice ?? product.Price;
+            if (string.IsNullOrWhiteSpace(product.WholesaleTiersJson)) return retailPrice;
+            try
+            {
+                var tiers = JsonSerializer.Deserialize<List<WholesaleTier>>(product.WholesaleTiersJson) ?? new();
+                return tiers.Where(t => t.MinQuantity > 0 && t.MinQuantity <= quantity && t.UnitPrice > 0)
+                    .OrderByDescending(t => t.MinQuantity).Select(t => t.UnitPrice).FirstOrDefault(retailPrice);
+            }
+            catch (JsonException) { return retailPrice; }
+        }
+
+        private sealed class WholesaleTier
+        {
+            public int MinQuantity { get; set; }
+            public decimal UnitPrice { get; set; }
         }
 
         public async Task<List<Order>> GetOrdersAsync(string? status = null, int? userId = null)

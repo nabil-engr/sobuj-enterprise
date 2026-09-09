@@ -111,6 +111,9 @@ namespace SobujEnterprise.Domain.Entities
         [MaxLength(300)]
         public string? Tags { get; set; }
 
+        // JSON array: [{"minQuantity": 12, "unitPrice": 500}, ...].
+        public string? WholesaleTiersJson { get; set; }
+
         public ICollection<ProductImage> GalleryImages { get; set; } = new List<ProductImage>();
         public ICollection<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
         public ICollection<ProductFilterValue> FilterValues { get; set; } = new List<ProductFilterValue>();

@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS ""UserAddresses"" (
     ""Area"" character varying(150) NULL,
     ""IsDefault"" boolean NOT NULL
 );
-CREATE INDEX IF NOT EXISTS ""IX_UserAddresses_UserId"" ON ""UserAddresses"" (""UserId"");");
+CREATE INDEX IF NOT EXISTS ""IX_UserAddresses_UserId"" ON ""UserAddresses"" (""UserId"");
+ALTER TABLE ""Products"" ADD COLUMN IF NOT EXISTS ""WholesaleTiersJson"" text NULL;");
 
             // 1. Seed Roles
             if (!await context.Roles.AnyAsync())

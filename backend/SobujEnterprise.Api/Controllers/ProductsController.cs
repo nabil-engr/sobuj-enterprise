@@ -39,7 +39,7 @@ namespace SobujEnterprise.Api.Controllers
                 p.Id, p.Title, p.Slug, p.SKU, p.ShortDescription, p.Description,
                 p.Price, p.DiscountPrice, p.StockQuantity, p.LowStockThreshold,
                 p.CategoryId, p.Category, p.BrandId, p.Brand, p.PrimaryImageUrl,
-                p.IsFeatured, p.IsNewArrival, p.IsBestSeller, p.Rating, p.ReviewCount, p.Tags,
+                p.IsFeatured, p.IsNewArrival, p.IsBestSeller, p.Rating, p.ReviewCount, p.Tags, p.WholesaleTiersJson,
                 p.GalleryImages, p.Variants
             }));
         }

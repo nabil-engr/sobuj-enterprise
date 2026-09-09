@@ -35,10 +35,16 @@ export class CartService {
   }
 
   public get subTotal(): number {
-    return this.items().reduce((acc, item) => {
-      const p = item.product.discountPrice ?? item.product.price;
-      return acc + (p * item.quantity);
-    }, 0);
+    return this.items().reduce((acc, item) => acc + this.getUnitPrice(item.product, item.quantity) * item.quantity, 0);
+  }
+
+  public getUnitPrice(product: Product, quantity: number): number {
+    const retail = product.discountPrice ?? product.price;
+    try {
+      const tiers = JSON.parse(product.wholesaleTiersJson || '[]') as { minQuantity: number; unitPrice: number }[];
+      return tiers.filter(t => t.minQuantity > 0 && t.minQuantity <= quantity && t.unitPrice > 0)
+        .sort((a, b) => b.minQuantity - a.minQuantity)[0]?.unitPrice ?? retail;
+    } catch { return retail; }
   }
 
   public get totalItemsCount(): number {
@@ -49,4 +55,3 @@ export class CartService {
     this.items.set([]);
   }
 }
-
