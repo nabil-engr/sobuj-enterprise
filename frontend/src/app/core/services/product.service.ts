@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product, FilterAttribute, PagedResult } from '../models/models';
+import { apiBaseUrl } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   // Direct HTTP backend URL when running locally
-  private readonly baseUrl = 'http://localhost:5000/api/Products';
-  private readonly filterUrl = 'http://localhost:5000/api/Filters';
+  private readonly baseUrl = `${apiBaseUrl}/Products`;
+  private readonly filterUrl = `${apiBaseUrl}/Filters`;
 
   constructor(private http: HttpClient) {}
 
@@ -70,6 +71,6 @@ export class ProductService {
   }
 
   public getBrands(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:5000/api/Brands');
+    return this.http.get<any[]>(`${apiBaseUrl}/Brands`);
   }
 }

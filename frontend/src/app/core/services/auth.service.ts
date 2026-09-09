@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, User, UserAddress } from '../models/models';
+import { apiBaseUrl } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { AuthResponse, User, UserAddress } from '../models/models';
 export class AuthService {
   private readonly TOKEN_KEY = 'sobuj_auth_token';
   private readonly USER_KEY = 'sobuj_user_profile';
-  private readonly baseUrl = 'http://localhost:5000/api/Auth';
+  private readonly baseUrl = `${apiBaseUrl}/Auth`;
 
   private currentUserSignal = signal<User | null>(this.getStoredUser());
   public currentUser = this.currentUserSignal.asReadonly();
@@ -36,7 +37,7 @@ export class AuthService {
   }
 
   public updateProfile(payload: { fullName: string; phoneNumber?: string }): Observable<any> {
-    return this.http.put<any>('http://localhost:5000/api/Users/profile', payload).pipe(
+    return this.http.put<any>(`${apiBaseUrl}/Users/profile`, payload).pipe(
       tap(updatedUser => {
         const current = this.currentUserSignal();
         if (current) {
@@ -53,19 +54,19 @@ export class AuthService {
   }
 
   public getProfile(): Observable<any> {
-    return this.http.get<any>('http://localhost:5000/api/Users/profile');
+    return this.http.get<any>(`${apiBaseUrl}/Users/profile`);
   }
 
   public getAddresses(): Observable<UserAddress[]> {
-    return this.http.get<UserAddress[]>('http://localhost:5000/api/Users/addresses');
+    return this.http.get<UserAddress[]>(`${apiBaseUrl}/Users/addresses`);
   }
 
   public saveAddress(payload: Partial<UserAddress>): Observable<UserAddress> {
-    return this.http.post<UserAddress>('http://localhost:5000/api/Users/addresses', payload);
+    return this.http.post<UserAddress>(`${apiBaseUrl}/Users/addresses`, payload);
   }
 
   public deleteAddress(id: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:5000/api/Users/addresses/${id}`);
+    return this.http.delete<void>(`${apiBaseUrl}/Users/addresses/${id}`);
   }
 
   public logout(): void {
