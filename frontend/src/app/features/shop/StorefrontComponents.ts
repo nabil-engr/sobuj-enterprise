@@ -243,7 +243,7 @@ import { CarouselModule, OwlOptions } from "ngx-owl-carousel-o";
               <a
                 [routerLink]="['/shop']"
                 [queryParams]="{ search: b.name }"
-                class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-emerald-50 rounded-2xl shadow-sm border border-slate-200/80 transition-all hover:scale-105"
+                class="flex-shrink-0 inline-flex items-center justify-center px-3 py-2 transition-transform hover:scale-105"
               >
                 <img
                   [src]="brandLogo(b)"
@@ -258,7 +258,7 @@ import { CarouselModule, OwlOptions } from "ngx-owl-carousel-o";
               <a
                 [routerLink]="['/shop']"
                 [queryParams]="{ search: b.name }"
-                class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-emerald-50 rounded-2xl shadow-sm border border-slate-200/80 transition-all hover:scale-105"
+                class="flex-shrink-0 inline-flex items-center justify-center px-3 py-2 transition-transform hover:scale-105"
               >
                 <img
                   [src]="brandLogo(b)"
