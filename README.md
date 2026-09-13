@@ -1,5 +1,20 @@
 # Sobuj Enterprise - Project Implementation Summary & Setup Guide
 
+## Current Architecture
+
+- `frontend/`: Angular standalone application organized into feature components and shared services.
+- `backend/`: ASP.NET Core API following Domain, Application, Infrastructure, and API boundaries.
+- `backend/SobujEnterprise.Tests/`: Automated commerce and service tests.
+- `database/`: Database schema and seed resources.
+
+### Verification
+
+```bash
+dotnet test backend/SobujEnterprise.Tests/SobujEnterprise.Tests.csproj
+cd frontend
+npx ng build
+```
+
 ## 1. Project Overview & Progress
 Sobuj Enterprise is an all-in-one e-commerce platform for stationery, office supplies, school materials, and art tools.
 
