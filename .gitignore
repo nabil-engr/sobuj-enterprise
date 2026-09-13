@@ -2,6 +2,7 @@
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
+frontend/out-tsc/
 .design-reference-*/
 
 # .NET build outputs
@@ -18,3 +19,10 @@ appsettings.Development.json
 appsettings.Production.json
 *.user
 .vs/
+.neon
+.agents/
+skills-lock.json
+.clean-*/
+.test-bin*/
+.verify-bin*/
+.verify-obj/

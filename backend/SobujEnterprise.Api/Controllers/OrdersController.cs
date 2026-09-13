@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SobujEnterprise.Application.DTOs;
 using SobujEnterprise.Application.Interfaces;
+using SobujEnterprise.Api.Services;
 
 namespace SobujEnterprise.Api.Controllers
 {
@@ -12,10 +13,12 @@ namespace SobujEnterprise.Api.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IOperationsService _operations;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IOperationsService operations)
         {
             _orderService = orderService;
+            _operations = operations;
         }
 
         // POST: api/orders (Public / Guest / Customer order submission)
@@ -85,6 +88,17 @@ namespace SobujEnterprise.Api.Controllers
             return Ok(order);
         }
 
+        [HttpGet("{id}/invoice.pdf")]
+        [Authorize]
+        public async Task<IActionResult> Invoice(int id)
+        {
+            var isAdmin = User.IsInRole("Admin");
+            var userId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var parsed) ? parsed : (int?)null;
+            var order = await _orderService.GetOrderByIdAsync(id, userId, isAdmin);
+            if (order is null) return NotFound();
+            return File(SimplePdf.Invoice(order), "application/pdf", $"{order.OrderNumber}.pdf");
+        }
+
         // PATCH: api/orders/{id}/status (Admin Only)
         [HttpPatch("{id}/status")]
         [Authorize(Roles = "Admin")]
@@ -92,6 +106,7 @@ namespace SobujEnterprise.Api.Controllers
         {
             var success = await _orderService.UpdateOrderStatusAsync(id, dto.Status, dto.AdminNote);
             if (!success) return NotFound(new { message = "Order not found." });
+            await _operations.RecordAuditAsync(int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var uid) ? uid : null, "OrderStatusChanged", "Order", id.ToString(), $"Status changed to {dto.Status}", HttpContext.Connection.RemoteIpAddress?.ToString());
             return NoContent();
         }
 

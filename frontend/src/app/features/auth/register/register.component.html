@@ -1,0 +1,44 @@
+    <div class="max-w-md mx-auto my-12 p-8 bg-white rounded-3xl border border-slate-200 shadow-xl">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-black text-slate-900">Create Account</h2>
+        <p class="text-xs text-slate-400 mt-1">Join Sobuj Enterprise for express delivery & fast orders</p>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+          <input type="text" formControlName="fullName" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+          <input type="email" formControlName="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
+          <input type="tel" formControlName="phoneNumber" placeholder="017XXXXXXXX" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <input type="password" formControlName="password" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid || isLoading()" class="w-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition shadow-md">
+          {{ isLoading() ? 'Creating account...' : 'Create Account' }}
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t text-center text-xs text-slate-500">
+        Already registered? 
+        <a routerLink="/auth/login" class="text-emerald-700 font-bold hover:underline">Sign in</a>
+      </div>
+    </div>
+  

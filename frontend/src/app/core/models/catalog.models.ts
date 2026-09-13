@@ -6,13 +6,15 @@ export interface Product {
   shortDescription?: string;
   description?: string;
   price: number;
-  discountPrice?: number;
+  discountPrice?: number | null;
   costPrice?: number;
   stockQuantity: number;
   lowStockThreshold?: number;
+  isInStock?: boolean;
+  availability?: 'InStock' | 'LowStock' | 'OutOfStock';
   categoryId: number;
   category?: Category;
-  brandId?: number;
+  brandId?: number | null;
   brand?: Brand;
   primaryImageUrl: string;
   isFeatured: boolean;
@@ -21,7 +23,7 @@ export interface Product {
   rating: number;
   reviewCount: number;
   tags?: string;
-  wholesaleTiersJson?: string;
+  wholesaleTiersJson?: string | null;
   variants?: ProductVariant[];
   galleryImages?: { id: number; imageUrl: string; displayOrder: number }[];
 }

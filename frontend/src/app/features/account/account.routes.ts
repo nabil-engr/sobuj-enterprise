@@ -5,6 +5,6 @@ export const ACCOUNT_ROUTES: Routes = [
     path: "",
     canActivate: [authGuard],
     loadComponent: () =>
-      import("../auth/AuthComponents").then((m) => m.UserAccountComponent),
+      import("../auth/account/account.component").then((m) => m.UserAccountComponent),
   },
 ];

@@ -1,15 +1,3 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { CartService } from './core/services/cart.service';
-import { AuthService } from './core/services/auth.service';
-
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
-  template: `
     <div class="min-h-screen flex flex-col bg-[#faf8ff] text-[#131b2e]">
       
       <!-- Storefront chrome is intentionally hidden inside the admin console. -->
@@ -101,6 +89,10 @@ import { AuthService } from './core/services/auth.service';
                   Sign In
                 </a>
               }
+
+              <a routerLink="/saved" class="hidden sm:flex items-center gap-1 rounded-xl bg-[#f2f3ff] px-3 py-2 text-xs font-bold text-[#003527]" aria-label="Wishlist and compare">
+                <span class="material-symbols-outlined text-[18px]">favorite</span><span>Saved</span>
+              </a>
 
               <!-- Basket Trigger -->
               <button (click)="cart.isDrawerOpen.set(true)" class="flex items-center gap-2 bg-[#003527] hover:bg-[#064e3b] text-white px-3 lg:px-4 py-2 rounded-xl shadow-sm transition-all" type="button">
@@ -269,28 +261,13 @@ import { AuthService } from './core/services/auth.service';
           </div>
         </div>
       </footer>
+      <nav class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-slate-200 bg-white px-2 py-2 shadow-[0_-4px_20px_rgba(0,0,0,.08)] md:hidden" aria-label="Mobile navigation">
+        <a routerLink="/" class="flex flex-col items-center text-[11px] font-bold"><span class="material-symbols-outlined">home</span>Home</a>
+        <a routerLink="/shop" class="flex flex-col items-center text-[11px] font-bold"><span class="material-symbols-outlined">storefront</span>Shop</a>
+        <a routerLink="/saved" class="flex flex-col items-center text-[11px] font-bold"><span class="material-symbols-outlined">favorite</span>Saved</a>
+        <button (click)="cart.isDrawerOpen.set(true)" class="flex flex-col items-center text-[11px] font-bold"><span class="material-symbols-outlined">shopping_bag</span>Cart ({{ cart.totalItemsCount }})</button>
+      </nav>
       }
 
     </div>
-  `
-})
-export class AppComponent {
-  cart = inject(CartService);
-  auth = inject(AuthService);
-  router = inject(Router);
-
-  navbarSearch = '';
-
-  isAdminRoute(): boolean {
-    return this.router.url.startsWith('/admin');
-  }
-
-  onSearch() {
-    if (this.navbarSearch.trim()) {
-      this.router.navigate(['/shop'], { queryParams: { search: this.navbarSearch.trim() } });
-      this.navbarSearch = '';
-    } else {
-      this.router.navigate(['/shop']);
-    }
-  }
-}
+  

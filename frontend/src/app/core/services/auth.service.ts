@@ -36,8 +36,8 @@ export class AuthService {
     );
   }
 
-  public updateProfile(payload: { fullName: string; phoneNumber?: string }): Observable<any> {
-    return this.http.put<any>(`${apiBaseUrl}/Users/profile`, payload).pipe(
+  public updateProfile(payload: { fullName: string; phoneNumber?: string }): Observable<User> {
+    return this.http.put<User>(`${apiBaseUrl}/Users/profile`, payload).pipe(
       tap(updatedUser => {
         const current = this.currentUserSignal();
         if (current) {
@@ -53,8 +53,8 @@ export class AuthService {
     );
   }
 
-  public getProfile(): Observable<any> {
-    return this.http.get<any>(`${apiBaseUrl}/Users/profile`);
+  public getProfile(): Observable<User> {
+    return this.http.get<User>(`${apiBaseUrl}/Users/profile`);
   }
 
   public getAddresses(): Observable<UserAddress[]> {

@@ -107,6 +107,7 @@ namespace SobujEnterprise.Application.Services
                 .Include(p => p.Brand)
                 .Include(p => p.Variants)
                 .Include(p => p.FilterValues)
+                .AsNoTracking()
                 .AsQueryable();
 
             if (query.CategoryId.HasValue)
@@ -152,14 +153,16 @@ namespace SobujEnterprise.Application.Services
             };
 
             var totalItems = await q.CountAsync();
-            var items = await q.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
+            var page = Math.Max(1, query.Page);
+            var pageSize = Math.Clamp(query.PageSize, 1, 60);
+            var items = await q.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return new PagedResult<Product>
             {
                 TotalItems = totalItems,
-                Page = query.Page,
-                PageSize = query.PageSize,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
                 Items = items
             };
         }
@@ -286,7 +289,8 @@ namespace SobujEnterprise.Application.Services
 
         public async Task<OrderResponseDto> CreateOrderAsync(CreateOrderDto dto, int? userId = null)
         {
-            var orderNumber = $"SE-{DateTime.UtcNow:yyyyMMdd}-{new Random().Next(1000, 9999)}";
+            await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+            var orderNumber = $"SE-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N")[..8].ToUpperInvariant()}";
 
             var order = new Order
             {
@@ -349,6 +353,7 @@ namespace SobujEnterprise.Application.Services
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             var whatsAppUrl = await _whatsAppService.GenerateWhatsAppOrderUrlAsync(order);
 
@@ -424,6 +429,11 @@ namespace SobujEnterprise.Application.Services
 
         public async Task<bool> UpdateOrderStatusAsync(int id, string newStatus, string? adminNote = null)
         {
+            var allowedStatuses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                { "Pending", "Confirmed", "Packed", "Shipped", "Delivered", "Cancelled" };
+            if (!allowedStatuses.Contains(newStatus))
+                throw new InvalidOperationException("Unsupported order status.");
+
             var order = await _context.Orders.FindAsync(id);
             if (order == null) return false;
 

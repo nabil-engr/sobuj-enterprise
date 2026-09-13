@@ -47,7 +47,9 @@ namespace SobujEnterprise.Application.DTOs
         public string DeliveryAddress { get; set; } = string.Empty;
         public string? City { get; set; } = "Dhaka";
         public string? Area { get; set; }
+        [RegularExpression("^(COD|bKash|Nagad|Card|Corporate_PO)$")]
         public string? PaymentMethod { get; set; } = "COD";
+        [RegularExpression("^(Standard_COD|Express_Delivery|Corporate_Bulk)$")]
         public string? OrderType { get; set; } = "Standard_COD";
         public string? CustomerNote { get; set; }
         [Required, MinLength(1)]
@@ -75,6 +77,7 @@ namespace SobujEnterprise.Application.DTOs
 
     public class UpdateOrderStatusDto
     {
+        [Required, RegularExpression("^(Pending|Confirmed|Packed|Shipped|Delivered|Cancelled)$")]
         public string Status { get; set; } = string.Empty;
         public string? AdminNote { get; set; }
     }

@@ -5,6 +5,12 @@
   <title>Sobuj Enterprise - Premium Stationery & Office Supplies</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Genuine stationery, office supplies and corporate bulk orders from Sobuj Enterprise, Bogura. Nationwide delivery across Bangladesh.">
+  <meta name="theme-color" content="#003527">
+  <meta name="application-name" content="Sobuj Enterprise">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://sobuj-enterprise.vercel.app/">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   
   <!-- Fonts & Material Symbols from Stitch Design -->
@@ -16,5 +22,6 @@
 </head>
 <body class="bg-[#faf8ff] text-[#131b2e] antialiased min-h-screen font-sans">
   <app-root></app-root>
+  <script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));</script>
 </body>
 </html>

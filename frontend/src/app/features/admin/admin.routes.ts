@@ -5,7 +5,7 @@ export const ADMIN_ROUTES: Routes = [
     path: "",
     canActivate: [adminGuard],
     loadComponent: () =>
-      import("./AdminControlCenterComponent").then(
+      import("./control-center/control-center.component").then(
         (m) => m.AdminControlCenterComponent,
       ),
   },

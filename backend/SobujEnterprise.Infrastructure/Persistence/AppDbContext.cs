@@ -23,6 +23,10 @@ namespace SobujEnterprise.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<UserAddress> UserAddresses => Set<UserAddress>();
         public DbSet<Role> Roles => Set<Role>();
+        public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
+        public DbSet<StockAlert> StockAlerts => Set<StockAlert>();
+        public DbSet<Coupon> Coupons => Set<Coupon>();
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +56,9 @@ namespace SobujEnterprise.Infrastructure.Persistence
             modelBuilder.Entity<Role>().HasIndex(r => r.RoleName).IsUnique();
             modelBuilder.Entity<WhatsAppTemplate>().HasIndex(t => t.TemplateType).IsUnique();
             modelBuilder.Entity<UserAddress>().HasOne(a => a.User).WithMany(u => u.Addresses).HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProductReview>().HasIndex(r => new { r.ProductId, r.UserId }).IsUnique();
+            modelBuilder.Entity<StockAlert>().HasIndex(a => new { a.ProductId, a.Email }).IsUnique();
+            modelBuilder.Entity<Coupon>().HasIndex(c => c.Code).IsUnique();
         }
     }
 }

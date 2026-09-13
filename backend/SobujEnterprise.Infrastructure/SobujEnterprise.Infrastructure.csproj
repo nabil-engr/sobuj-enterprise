@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SobujEnterprise.Domain\SobujEnterprise.Domain.csproj" />
+    <ProjectReference Include="..\SobujEnterprise.Application\SobujEnterprise.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

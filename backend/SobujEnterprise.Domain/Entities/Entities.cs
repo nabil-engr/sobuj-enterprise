@@ -90,6 +90,10 @@ namespace SobujEnterprise.Domain.Entities
         public int StockQuantity { get; set; } = 0;
         [JsonIgnore]
         public int LowStockThreshold { get; set; } = 5;
+        [NotMapped]
+        public bool IsInStock => StockQuantity > 0;
+        [NotMapped]
+        public string Availability => StockQuantity <= 0 ? "OutOfStock" : StockQuantity <= LowStockThreshold ? "LowStock" : "InStock";
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
@@ -347,5 +351,50 @@ namespace SobujEnterprise.Domain.Entities
         [MaxLength(150)]
         public string? Area { get; set; }
         public bool IsDefault { get; set; }
+    }
+
+    public class ProductReview : BaseEntity
+    {
+        public int ProductId { get; set; }
+        public int UserId { get; set; }
+        [Range(1, 5)] public int Rating { get; set; }
+        [Required, MaxLength(120)] public string Title { get; set; } = string.Empty;
+        [Required, MaxLength(1500)] public string Comment { get; set; } = string.Empty;
+        public bool IsVerifiedPurchase { get; set; }
+        public bool IsApproved { get; set; }
+        public Product? Product { get; set; }
+        public User? User { get; set; }
+    }
+
+    public class StockAlert : BaseEntity
+    {
+        public int ProductId { get; set; }
+        public int? UserId { get; set; }
+        [Required, EmailAddress, MaxLength(150)] public string Email { get; set; } = string.Empty;
+        public bool IsNotified { get; set; }
+        public Product? Product { get; set; }
+    }
+
+    public class Coupon : BaseEntity
+    {
+        [Required, MaxLength(40)] public string Code { get; set; } = string.Empty;
+        public decimal DiscountValue { get; set; }
+        public bool IsPercentage { get; set; }
+        public decimal? MinimumOrder { get; set; }
+        public DateTime StartsAt { get; set; }
+        public DateTime EndsAt { get; set; }
+        public bool IsActive { get; set; } = true;
+        public int UsageLimit { get; set; }
+        public int UsedCount { get; set; }
+    }
+
+    public class AuditLog : BaseEntity
+    {
+        public int? UserId { get; set; }
+        [Required, MaxLength(80)] public string Action { get; set; } = string.Empty;
+        [Required, MaxLength(80)] public string EntityType { get; set; } = string.Empty;
+        [MaxLength(80)] public string? EntityId { get; set; }
+        [MaxLength(2000)] public string? Details { get; set; }
+        [MaxLength(64)] public string? IpAddress { get; set; }
     }
 }

@@ -28,5 +28,5 @@ export const routes: Routes = [
     loadChildren: () =>
       import("./features/admin/admin.routes").then((m) => m.ADMIN_ROUTES),
   },
-  { path: "**", redirectTo: "" },
+  { path: "**", loadComponent: () => import('./features/shop/not-found/not-found.component').then(m => m.NotFoundComponent) },
 ];

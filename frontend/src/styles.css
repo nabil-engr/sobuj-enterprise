@@ -8,6 +8,19 @@ body {
   padding: 0;
 }
 
+:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @keyframes marquee-rtl {
   0% {
     transform: translateX(0%);

@@ -3,6 +3,6 @@ export const CHECKOUT_ROUTES: Routes = [
   {
     path: "",
     loadComponent: () =>
-      import("./CheckoutComponent").then((m) => m.CheckoutComponent),
+      import("./checkout/checkout.component").then((m) => m.CheckoutComponent),
   },
 ];

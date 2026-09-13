@@ -3,11 +3,11 @@ export const AUTH_ROUTES: Routes = [
   {
     path: "login",
     loadComponent: () =>
-      import("./AuthComponents").then((m) => m.LoginComponent),
+      import("./login/login.component").then((m) => m.LoginComponent),
   },
   {
     path: "register",
     loadComponent: () =>
-      import("./AuthComponents").then((m) => m.RegisterComponent),
+      import("./register/register.component").then((m) => m.RegisterComponent),
   },
 ];

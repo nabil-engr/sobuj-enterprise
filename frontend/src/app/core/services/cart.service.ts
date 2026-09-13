@@ -5,7 +5,8 @@ import { CartItem, Product } from '../models';
   providedIn: 'root'
 })
 export class CartService {
-  private items = signal<CartItem[]>([]);
+  private readonly storageKey = 'sobuj_cart_v1';
+  private items = signal<CartItem[]>(this.restore());
   public cartItems = this.items.asReadonly();
   public isDrawerOpen = signal<boolean>(false);
 
@@ -18,11 +19,13 @@ export class CartService {
       current.push({ product, quantity, selectedVariant });
     }
     this.items.set(current);
+    this.persist();
     this.isDrawerOpen.set(true);
   }
 
   public removeFromCart(productId: number, variant?: string) {
     this.items.set(this.items().filter(i => !(i.product.id === productId && i.selectedVariant === variant)));
+    this.persist();
   }
 
   public updateQuantity(productId: number, quantity: number, variant?: string) {
@@ -31,6 +34,7 @@ export class CartService {
     if (target) {
       target.quantity = Math.max(1, quantity);
       this.items.set(current);
+      this.persist();
     }
   }
 
@@ -53,5 +57,17 @@ export class CartService {
 
   public clear() {
     this.items.set([]);
+    this.persist();
+  }
+
+  private restore(): CartItem[] {
+    try {
+      const value = localStorage.getItem(this.storageKey);
+      return value ? JSON.parse(value) as CartItem[] : [];
+    } catch { return []; }
+  }
+
+  private persist(): void {
+    try { localStorage.setItem(this.storageKey, JSON.stringify(this.items())); } catch { /* storage is optional */ }
   }
 }

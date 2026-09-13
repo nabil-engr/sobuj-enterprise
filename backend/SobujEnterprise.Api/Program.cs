@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
 using Npgsql;
 using SobujEnterprise.Application.Interfaces;
 using SobujEnterprise.Application.Services;
 using SobujEnterprise.Infrastructure.Authentication;
 using SobujEnterprise.Infrastructure.Hubs;
 using SobujEnterprise.Infrastructure.Persistence;
+using SobujEnterprise.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +30,7 @@ if (connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreC
     {
         Host = databaseUri.Host,
         Port = databaseUri.IsDefaultPort ? 5432 : databaseUri.Port,
-        Database = databaseUri.AbsolutePath.Trim('/'),
+        Database = Uri.UnescapeDataString(databaseUri.AbsolutePath.Trim('/')),
         Username = Uri.UnescapeDataString(credentials[0]),
         Password = credentials.Length > 1 ? Uri.UnescapeDataString(credentials[1]) : string.Empty,
         SslMode = SslMode.Require
@@ -49,12 +51,33 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
 builder.Services.AddScoped<IFilterService, FilterService>();
+builder.Services.AddScoped<IEngagementService, EngagementService>();
+builder.Services.AddScoped<IOperationsService, OperationsService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IReferenceDataService, ReferenceDataService>();
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
 // 3. Real-time SignalR Hub for Live Admin Notifications
 builder.Services.AddSignalR();
 
 // 4. API Controllers & Routing
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddHealthChecks();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 120,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+});
 
 // 5. CORS for Angular Frontend
 builder.Services.AddCors(options =>
@@ -133,6 +156,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+app.UseRateLimiter();
+
 // 8. Auto Database Initialization & Seeding
 using (var scope = app.Services.CreateScope())
 {
@@ -167,7 +193,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<OrderNotificationHub>("/hubs/orders");
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+app.MapHealthChecks("/health");
 app.MapFallbackToFile("index.html");
 
 app.Run();

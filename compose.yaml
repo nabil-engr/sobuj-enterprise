@@ -1,0 +1,10 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+services:
+  sobujenterpriseapi:
+    image: sobujenterpriseapi
+    build:
+      context: .
+      dockerfile: backend/SobujEnterprise.Api/Dockerfile
+    ports:
+      - 5000:5000

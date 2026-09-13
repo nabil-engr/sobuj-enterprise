@@ -8,13 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SobujEnterprise.Domain\SobujEnterprise.Domain.csproj" />
-    <ProjectReference Include="..\SobujEnterprise.Infrastructure\SobujEnterprise.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
   </ItemGroup>
 
 </Project>
-
