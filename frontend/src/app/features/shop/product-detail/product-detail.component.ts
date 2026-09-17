@@ -115,14 +115,12 @@ export class ProductDetailComponent implements OnInit {
       this.engagementMessage.set("Enter a valid email address.");
       return;
     }
-    this.engagement
-      .stockAlert(productId, this.alertEmail)
-      .subscribe({
-        next: (r) => this.engagementMessage.set(r.message),
-        error: () =>
-          this.engagementMessage.set(
-            "Could not save the alert. Please try again.",
-          ),
-      });
+    this.engagement.stockAlert(productId, this.alertEmail).subscribe({
+      next: (r) => this.engagementMessage.set(r.message),
+      error: () =>
+        this.engagementMessage.set(
+          "Could not save the alert. Please try again.",
+        ),
+    });
   }
 }

@@ -1,22 +1,22 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { AuthResponse, User, UserAddress } from '../models';
-import { apiBaseUrl } from '../config/api.config';
+import { Injectable, signal, computed } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, tap } from "rxjs";
+import { AuthResponse, User, UserAddress } from "../models";
+import { apiBaseUrl } from "../config/api.config";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthService {
-  private readonly TOKEN_KEY = 'sobuj_auth_token';
-  private readonly USER_KEY = 'sobuj_user_profile';
+  private readonly TOKEN_KEY = "sobuj_auth_token";
+  private readonly USER_KEY = "sobuj_user_profile";
   private readonly baseUrl = `${apiBaseUrl}/Auth`;
 
   private currentUserSignal = signal<User | null>(this.getStoredUser());
   public currentUser = this.currentUserSignal.asReadonly();
 
   public isAuthenticated = computed(() => !!this.currentUserSignal());
-  public isAdmin = computed(() => this.currentUserSignal()?.role === 'Admin');
+  public isAdmin = computed(() => this.currentUserSignal()?.role === "Admin");
 
   constructor(private http: HttpClient) {}
 
@@ -24,32 +24,44 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  public register(payload: { fullName: string; email: string; password: string; phoneNumber?: string; role?: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, payload).pipe(
-      tap(res => this.handleAuthSuccess(res))
-    );
+  public register(payload: {
+    fullName: string;
+    email: string;
+    password: string;
+    phoneNumber?: string;
+    role?: string;
+  }): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/register`, payload)
+      .pipe(tap((res) => this.handleAuthSuccess(res)));
   }
 
-  public login(payload: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, payload).pipe(
-      tap(res => this.handleAuthSuccess(res))
-    );
+  public login(payload: {
+    email: string;
+    password: string;
+  }): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/login`, payload)
+      .pipe(tap((res) => this.handleAuthSuccess(res)));
   }
 
-  public updateProfile(payload: { fullName: string; phoneNumber?: string }): Observable<User> {
+  public updateProfile(payload: {
+    fullName: string;
+    phoneNumber?: string;
+  }): Observable<User> {
     return this.http.put<User>(`${apiBaseUrl}/Users/profile`, payload).pipe(
-      tap(updatedUser => {
+      tap((updatedUser) => {
         const current = this.currentUserSignal();
         if (current) {
           const merged: User = {
             ...current,
             fullName: updatedUser.fullName,
-            phoneNumber: updatedUser.phoneNumber
+            phoneNumber: updatedUser.phoneNumber,
           };
           localStorage.setItem(this.USER_KEY, JSON.stringify(merged));
           this.currentUserSignal.set(merged);
         }
-      })
+      }),
     );
   }
 
@@ -62,7 +74,10 @@ export class AuthService {
   }
 
   public saveAddress(payload: Partial<UserAddress>): Observable<UserAddress> {
-    return this.http.post<UserAddress>(`${apiBaseUrl}/Users/addresses`, payload);
+    return this.http.post<UserAddress>(
+      `${apiBaseUrl}/Users/addresses`,
+      payload,
+    );
   }
 
   public deleteAddress(id: number): Observable<void> {
@@ -81,7 +96,7 @@ export class AuthService {
       id: res.userId,
       fullName: res.fullName,
       email: res.email,
-      role: res.role
+      role: res.role,
     };
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     this.currentUserSignal.set(user);

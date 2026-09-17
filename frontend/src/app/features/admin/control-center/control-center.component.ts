@@ -1,12 +1,28 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, WritableSignal, inject, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  WritableSignal,
+  inject,
+  signal,
+} from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Router, RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../../core/services/auth.service";
 import { AdminApiService } from "../services/admin-api.service";
-import { AdminListItem, AdminMenuItem, AdminUser, Brand, Category, FilterAttribute, ProductDraft, SimpleDraft, WhatsAppTemplate } from "../models/admin.models";
+import {
+  AdminListItem,
+  AdminMenuItem,
+  AdminUser,
+  Brand,
+  Category,
+  FilterAttribute,
+  ProductDraft,
+  SimpleDraft,
+  WhatsAppTemplate,
+} from "../models/admin.models";
 import { OrderService } from "../../../core/services/order.service";
 import { ProductService } from "../../../core/services/product.service";
 import { Order, Product } from "../../../core/models";
@@ -26,8 +42,8 @@ type Section =
   selector: "app-admin-control-center",
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './control-center.component.html',
-  styleUrl: './control-center.component.css',
+  templateUrl: "./control-center.component.html",
+  styleUrl: "./control-center.component.css",
 })
 export class AdminControlCenterComponent implements OnInit {
   private adminApi = inject(AdminApiService);
@@ -102,7 +118,7 @@ export class AdminControlCenterComponent implements OnInit {
       ? this.categories()
       : this.section() === "brands"
         ? this.brands()
-        : this.filters() as AdminListItem[];
+        : (this.filters() as AdminListItem[]);
   }
   refresh() {
     this.ordersApi.getOrders().subscribe((x) => this.orders.set(x));
@@ -215,7 +231,10 @@ export class AdminControlCenterComponent implements OnInit {
       ...this.emptySimple(),
       ...item,
       slug: item.slug || item.code || "",
-      displayType: item.displayType === "Dropdown" || item.displayType === "ColorSwatch" ? item.displayType : "Checkbox",
+      displayType:
+        item.displayType === "Dropdown" || item.displayType === "ColorSwatch"
+          ? item.displayType
+          : "Checkbox",
     };
   }
   saveSimple() {
@@ -268,17 +287,16 @@ export class AdminControlCenterComponent implements OnInit {
       return;
     }
     this.brandSaving.set(true);
-    this.adminApi.uploadImage(file)
-      .subscribe({
-        next: (r) => {
-          this.brandDraft.logoUrl = r.url;
-          this.brandSaving.set(false);
-        },
-        error: () => {
-          this.ok("Logo upload failed");
-          this.brandSaving.set(false);
-        },
-      });
+    this.adminApi.uploadImage(file).subscribe({
+      next: (r) => {
+        this.brandDraft.logoUrl = r.url;
+        this.brandSaving.set(false);
+      },
+      error: () => {
+        this.ok("Logo upload failed");
+        this.brandSaving.set(false);
+      },
+    });
   }
   saveBrand() {
     if (!this.brandDraft.name?.trim()) {
@@ -356,17 +374,16 @@ export class AdminControlCenterComponent implements OnInit {
       return;
     }
     this.imageUploading.set(true);
-    this.adminApi.uploadImage(file)
-      .subscribe({
-        next: (r) => {
-          this.productDraft.primaryImageUrl = r.url;
-          this.imageUploading.set(false);
-        },
-        error: (e) => {
-          this.formError.set(e?.error?.message || "Image upload failed");
-          this.imageUploading.set(false);
-        },
-      });
+    this.adminApi.uploadImage(file).subscribe({
+      next: (r) => {
+        this.productDraft.primaryImageUrl = r.url;
+        this.imageUploading.set(false);
+      },
+      error: (e) => {
+        this.formError.set(e?.error?.message || "Image upload failed");
+        this.imageUploading.set(false);
+      },
+    });
   }
   saveProduct() {
     this.formError.set("");
@@ -450,8 +467,8 @@ export class AdminControlCenterComponent implements OnInit {
           }
         : { name, slug: this.slug(name), displayOrder: 0, isFeatured: false };
     if (kind === "brands") {
-      body['logoUrl'] = prompt("Official logo image URL (optional)") || "";
-      body['website'] = prompt("Official brand website (optional)") || "";
+      body["logoUrl"] = prompt("Official logo image URL (optional)") || "";
+      body["website"] = prompt("Official brand website (optional)") || "";
     }
     this.adminApi.create(path, body).subscribe(() => {
       this.ok(`${name} created`);
@@ -490,12 +507,10 @@ export class AdminControlCenterComponent implements OnInit {
   toggleRole(u: AdminUser) {
     const role = u.role === "Admin" ? "Customer" : "Admin";
     if (!confirm(`Change ${u.fullName} to ${role}?`)) return;
-    this.adminApi
-      .patch("Users", u.id, { role })
-      .subscribe(() => {
-        this.ok("User role updated");
-        this.refresh();
-      });
+    this.adminApi.patch("Users", u.id, { role }).subscribe(() => {
+      this.ok("User role updated");
+      this.refresh();
+    });
   }
   remove(path: string, id: number) {
     if (

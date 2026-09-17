@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { CreateOrderDto, OrderResponseDto, Order } from '../models';
-import { apiBaseUrl } from '../config/api.config';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { CreateOrderDto, OrderResponseDto, Order } from "../models";
+import { apiBaseUrl } from "../config/api.config";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class OrderService {
   private readonly baseUrl = `${apiBaseUrl}/Orders`;
@@ -18,7 +18,7 @@ export class OrderService {
 
   public getOrders(status?: string): Observable<Order[]> {
     let params = new HttpParams();
-    if (status) params = params.set('status', status);
+    if (status) params = params.set("status", status);
     return this.http.get<Order[]>(this.baseUrl, { params });
   }
 
@@ -30,11 +30,21 @@ export class OrderService {
     return this.http.get<Order>(`${this.baseUrl}/${id}`);
   }
 
-  public updateOrderStatus(id: number, status: string, adminNote?: string): Observable<void> {
-    return this.http.patch<void>(`${this.baseUrl}/${id}/status`, { status, adminNote });
+  public updateOrderStatus(
+    id: number,
+    status: string,
+    adminNote?: string,
+  ): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/${id}/status`, {
+      status,
+      adminNote,
+    });
   }
 
   public cancelOrder(id: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/${id}/cancel`, {});
+    return this.http.post<{ message: string }>(
+      `${this.baseUrl}/${id}/cancel`,
+      {},
+    );
   }
 }

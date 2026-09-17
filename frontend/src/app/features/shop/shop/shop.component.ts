@@ -20,8 +20,8 @@ import { CarouselModule, OwlOptions } from "ngx-owl-carousel-o";
   selector: "app-shop",
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './shop.component.html',
-  styleUrl: './shop.component.css',
+  templateUrl: "./shop.component.html",
+  styleUrl: "./shop.component.css",
 })
 export class ShopComponent implements OnInit {
   cart = inject(CartService);
@@ -327,4 +327,3 @@ export class ShopComponent implements OnInit {
     ];
   }
 }
-

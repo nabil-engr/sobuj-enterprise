@@ -20,8 +20,8 @@ import { CarouselModule, OwlOptions } from "ngx-owl-carousel-o";
   selector: "app-home",
   standalone: true,
   imports: [CommonModule, RouterModule, CarouselModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: "./home.component.html",
+  styleUrl: "./home.component.css",
 })
 export class HomeComponent implements OnInit {
   cart = inject(CartService);
